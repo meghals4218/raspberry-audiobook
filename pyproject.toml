@@ -1,0 +1,17 @@
+[project]
+name = "raspberry-audiobook"
+version = "0.1.0"
+description = "NFC-based audiobook player for Raspberry Pi"
+requires-python = ">=3.10"
+dependencies = [
+    "pyyaml",
+]
+
+[project.optional-dependencies]
+pi = [
+    "mfrc522",
+    "RPi.GPIO",
+]
+
+[project.scripts]
+audiobook-player = "raspberry_audiobook.main:main"
