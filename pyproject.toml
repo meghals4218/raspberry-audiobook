@@ -4,10 +4,19 @@ version = "0.1.0"
 description = "NFC-based audiobook player for Raspberry Pi"
 requires-python = ">=3.10"
 dependencies = [
-    "pyyaml",
+    "gpiozero",
+    "PyYAML",
+    "mfrc522",
+    "python-vlc",
+    "adafruit-circuitpython-rgb-display",
+    "Pillow",
 ]
 
 [project.optional-dependencies]
+dev = [
+    "pytest",
+    "ruff",
+]
 pi = [
     "mfrc522",
     "RPi.GPIO",

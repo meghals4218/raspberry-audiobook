@@ -10,6 +10,10 @@ class AudiobookApp:
         self.books = load_books(config_path)
         self.reader = MockNFCReader() if use_mock else RC522Reader()
         self.player = AudioPlayer()
+        
+    def run(self) -> None:
+        while True:
+            self.run_once()
 
     def run_once(self) -> None:
         uid = self.reader.read_uid()
@@ -25,4 +29,5 @@ class AudiobookApp:
         path = Path(book["path"])
 
         print(f"Selected: {title}")
-        self.player.play_folder(path)
+        self.player.load_folder(path)
+        self.player.play_current()
