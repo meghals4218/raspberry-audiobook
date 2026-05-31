@@ -1,23 +1,22 @@
-# player.py
-
 from pathlib import Path
-import vlc
 import time
+
+import vlc
 
 
 class AudioPlayer:
-    def __init__(self):
+    def __init__(self) -> None:
         self.instance = vlc.Instance("--aout=alsa", "--alsa-audio-device=default")
         self.player = self.instance.media_player_new()
 
-        self.playlist = []
+        self.playlist: list[Path] = []
         self.index = 0
 
-    def load_folder(self, folder: Path):
+    def load_folder(self, folder: Path) -> None:
         self.playlist = sorted(folder.glob("*.mp3"))
         self.index = 0
 
-    def play_current(self):
+    def play_current(self) -> None:
         if not self.playlist:
             return
 
@@ -27,25 +26,28 @@ class AudioPlayer:
 
         time.sleep(0.5)
 
-    def pause(self):
+    def pause(self) -> None:
         self.player.pause()
 
-    def stop(self):
+    def stop(self) -> None:
         self.player.stop()
 
-    def set_volume(self, volume):
+    def set_volume(self, volume: int) -> None:
         self.player.audio_set_volume(volume)
 
-    def seek_relative(self, seconds):
+    def seek_relative(self, seconds: int) -> None:
         current = self.player.get_time()
-        self.player.set_time(current + seconds * 1000)
+        if current < 0:
+            return
 
-    def next_chapter(self):
+        self.player.set_time(max(0, current + seconds * 1000))
+
+    def next_chapter(self) -> None:
         if self.index < len(self.playlist) - 1:
             self.index += 1
             self.play_current()
 
-    def prev_chapter(self):
+    def prev_chapter(self) -> None:
         if self.index > 0:
             self.index -= 1
             self.play_current()

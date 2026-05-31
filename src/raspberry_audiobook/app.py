@@ -6,11 +6,11 @@ from .player import AudioPlayer
 
 
 class AudiobookApp:
-    def __init__(self, config_path: Path, use_mock: bool = False):
+    def __init__(self, config_path: Path, use_mock: bool = False) -> None:
         self.books = load_books(config_path)
         self.reader = MockNFCReader() if use_mock else RC522Reader()
         self.player = AudioPlayer()
-        
+
     def run(self) -> None:
         while True:
             self.run_once()
