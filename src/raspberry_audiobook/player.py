@@ -7,7 +7,7 @@ import time
 
 class AudioPlayer:
     def __init__(self):
-        self.instance = vlc.Instance()
+        self.instance = vlc.Instance("--aout=alsa", "--alsa-audio-device=default")
         self.player = self.instance.media_player_new()
 
         self.playlist = []
