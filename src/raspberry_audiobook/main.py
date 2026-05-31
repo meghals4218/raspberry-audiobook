@@ -20,7 +20,7 @@ def main() -> None:
     volume = VolumeController()
     seek = SeekController(on_seek=app.player.seek_relative, step_seconds=10)
 
-    app.run_once()
+    app.run()
 
 
 if __name__ == "__main__":
