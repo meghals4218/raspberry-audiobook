@@ -26,6 +26,23 @@ class AudioPlayer:
 
         time.sleep(0.5)
 
+    def play_until_finished(self, poll_seconds: float = 0.5) -> None:
+        while self.playlist:
+            state = self.player.get_state()
+
+            if state == vlc.State.Ended:
+                if self.index >= len(self.playlist) - 1:
+                    return
+
+                self.index += 1
+                self.play_current()
+                continue
+
+            if state in {vlc.State.Stopped, vlc.State.Error}:
+                return
+
+            time.sleep(poll_seconds)
+
     def pause(self) -> None:
         self.player.pause()
 

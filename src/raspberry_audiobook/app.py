@@ -31,3 +31,5 @@ class AudiobookApp:
         print(f"Selected: {title}")
         self.player.load_folder(path)
         self.player.play_current()
+        self.player.play_until_finished()
+        print("Playback finished. Ready for next tag.")
