@@ -12,6 +12,10 @@ pi = [
     "mfrc522",
     "RPi.GPIO",
 ]
+display = [
+    "adafruit-circuitpython-rgb-display",
+    "adafruit-circuitpython-display-text",
+]
 
 [project.scripts]
 audiobook-player = "raspberry_audiobook.main:main"
