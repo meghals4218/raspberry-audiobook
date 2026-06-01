@@ -37,8 +37,12 @@ class VolumeController:
         self.last_steps = steps
 
     def set_volume(self, volume: int) -> None:
+        previous_volume = self.volume
         self.volume = self._clamp(volume)
         self.on_change(self.volume)
+
+        if self.volume != previous_volume:
+            print(f"Volume: {self.volume}%")
 
     def _clamp(self, volume: int) -> int:
         return max(0, min(100, volume))
