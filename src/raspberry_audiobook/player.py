@@ -1,4 +1,5 @@
 from pathlib import Path
+from collections.abc import Callable
 import time
 
 import vlc
@@ -21,7 +22,7 @@ class AudioPlayer:
         self.playlist = sorted(folder.glob("*.mp3"))
         self.index = 0
 
-    def play_current(self) -> None:
+    def play_current(self, start_ms: int = 0) -> None:
         if not self.playlist:
             return
 
@@ -31,22 +32,37 @@ class AudioPlayer:
 
         time.sleep(0.5)
 
-    def play_until_finished(self, poll_seconds: float = 0.5) -> None:
+        if start_ms > 0:
+            self.player.set_time(start_ms)
+
+    def play_until_finished(
+        self,
+        poll_seconds: float = 0.5,
+        on_progress: Callable[[int, int], None] | None = None,
+    ) -> bool:
         while self.playlist:
             state = self.player.get_state()
 
             if state == vlc.State.Ended:
                 if self.index >= len(self.playlist) - 1:
-                    return
+                    return True
 
                 self.index += 1
                 self.play_current()
                 continue
 
             if state in {vlc.State.Stopped, vlc.State.Error}:
-                return
+                return False
+
+            if on_progress is not None:
+                position = self.player.get_time()
+
+                if position >= 0:
+                    on_progress(self.index, position)
 
             time.sleep(poll_seconds)
+
+        return False
 
     def pause(self) -> None:
         self.player.pause()
@@ -100,3 +116,11 @@ class AudioPlayer:
             f"[{bar}] "
             f"{self._format_time(clamped_position)} / {self._format_time(length)}"
         )
+
+    def current_position(self) -> tuple[int, int] | None:
+        position = self.player.get_time()
+
+        if position < 0:
+            return None
+
+        return self.index, position
