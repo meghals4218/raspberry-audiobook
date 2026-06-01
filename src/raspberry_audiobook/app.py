@@ -12,8 +12,16 @@ class AudiobookApp:
         self.player = AudioPlayer()
 
     def run(self) -> None:
-        while True:
-            self.run_once()
+        try:
+            while True:
+                try:
+                    self.run_once()
+                except Exception as error:
+                    print(f"Error occurred: {error}")
+        except KeyboardInterrupt:
+            print("Exiting...")
+        finally:
+            self.player.stop()
 
     def run_once(self) -> None:
         uid = self.reader.read_uid()
